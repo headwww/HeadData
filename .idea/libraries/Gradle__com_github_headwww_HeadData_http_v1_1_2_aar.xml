@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.headwww.HeadData:http:v1.1.2@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/a7298badc5af5185cd6b4522ca694f29/http-v1.1.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/a7298badc5af5185cd6b4522ca694f29/http-v1.1.1/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.github.headwww.HeadData/http/v1.1.2/b2a5c2cd41b8e39646b2b761fa7edc120c6834ce/http-v1.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

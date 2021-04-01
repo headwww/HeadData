@@ -11,7 +11,11 @@ import com.head.http.cookie.CookieManger;
 import com.head.http.exception.ApiException;
 import com.tencent.mmkv.MMKV;
 
+import io.reactivex.disposables.Disposable;
+
 public class MainActivity extends AppCompatActivity {
+
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         Log.e("====", bValue + "" + iValue + str + "--");
         CookieManger cookieManger = new CookieManger(this);
         cookieManger.removeAll();
-        HeadHttp
+
+         disposable= HeadHttp
                 .post("http://192.168.1.144:8003/security/login?ClientType=Web ")
                 .params("username", "85042820")
                 .params("password", "shjt@1234")
@@ -66,5 +71,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        disposable.dispose();
     }
 }

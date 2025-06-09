@@ -2,6 +2,8 @@ package com.head.data;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,10 +19,39 @@ public class MainActivity extends AppCompatActivity {
 
     private Disposable disposable;
 
+    private Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HeadHttp
+                        .post("http://192.168.1.244:9094/api/logisticsCtrl/CurrentStoreAndCheck")
+                        .upJson("")
+
+                        .execute(new SimpleCallBack<String>() {
+                            @Override
+                            public void onError(ApiException e) {
+                                Log.e("Err=====", e.getMessage()+e.getCode());
+
+                            }
+
+                            @Override
+                            public void onSuccess(String s) {
+                                // AuthorityParentList sss=new AuthorityParentList();
+                                // sss.setName("--qqqq-");
+                                // JsonMap userJson = JsonBean.setBean(sss);
+
+                                // JsonList list=JsonList.parse(s);
+                                // Log.e("=====",""+list.getJsonMap(0).getString("test"));
+                            }
+                        });
+            }
+        });
 
         MMKV kv = MMKV.defaultMMKV();
 
@@ -37,21 +68,22 @@ public class MainActivity extends AppCompatActivity {
         CookieManger cookieManger = new CookieManger(this);
         cookieManger.removeAll();
 
-         disposable= HeadHttp
-                .post("http://192.168.1.144:8003/security/login?ClientType=Web ")
-                .params("username", "85042820")
-                .params("password", "shjt@1234")
+        disposable = HeadHttp
+                .post("http://192.168.1.244:9094/api/login")
+                .params("username", "cs001")
+                .params("password", "123456")
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
-
 
                     }
 
                     @Override
                     public void onSuccess(String o) {
                         HeadHttp
-                                .get("http://192.168.1.144:8003/othermenu/mt/AuthorityParentList")
+                                .post("http://192.168.1.244:9094/api/logisticsCtrl/CurrentStoreAndCheck")
+                                .upJson("")
+
                                 .execute(new SimpleCallBack<String>() {
                                     @Override
                                     public void onError(ApiException e) {
@@ -60,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onSuccess(String s) {
-//                                        AuthorityParentList sss=new AuthorityParentList();
-//                                        sss.setName("--qqqq-");
-//                                        JsonMap userJson = JsonBean.setBean(sss);
+                                        // AuthorityParentList sss=new AuthorityParentList();
+                                        // sss.setName("--qqqq-");
+                                        // JsonMap userJson = JsonBean.setBean(sss);
 
-//                                        JsonList list=JsonList.parse(s);
-//                                        Log.e("=====",""+list.getJsonMap(0).getString("test"));
+                                        // JsonList list=JsonList.parse(s);
+                                        // Log.e("=====",""+list.getJsonMap(0).getString("test"));
                                     }
                                 });
                     }
@@ -76,6 +108,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        disposable.dispose();
+        // disposable.dispose();
     }
 }

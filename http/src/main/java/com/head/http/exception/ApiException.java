@@ -1,6 +1,7 @@
 
 package com.head.http.exception;
 
+import java.io.IOException;
 import java.io.NotSerializableException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
@@ -8,14 +9,17 @@ import java.net.UnknownHostException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.head.http.model.ApiResult;
 
 import android.net.ParseException;
+import android.util.Log;
 
 import retrofit2.HttpException;
+import retrofit2.Response;
 
 /**
  *
@@ -61,6 +65,10 @@ public class ApiException extends Exception
     public static final int PARSE_ERROR = 1001;
     
     private String message;
+
+    private String errorText;
+
+    private String throwable;
     
     public void setMessage(String message)
     {
@@ -73,7 +81,23 @@ public class ApiException extends Exception
         this.code = code;
         this.message = throwable.getMessage();
     }
-    
+
+    public String getErrorText() {
+        return errorText;
+    }
+
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
+    }
+
+    public String getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(String throwable) {
+        this.throwable = throwable;
+    }
+
     public int getCode()
     {
         return code;
@@ -115,7 +139,25 @@ public class ApiException extends Exception
              * "网络错误,Code:"+httpException.code()+" ,err:"+httpException.
              * getMessage(); break; }
              */
-            ex.message = httpException.getMessage();
+            try {
+                Response<?> response = httpException.response();
+                if (response != null && response.errorBody() != null) {
+                    String errorBody = response.errorBody().string();
+
+                    try {
+                        ErrorResponse errorResponse = new Gson().fromJson(errorBody, ErrorResponse.class);
+                        if (errorResponse != null) {
+                            ex.message = errorResponse.getErrorText();
+                            ex.throwable = errorResponse.getThrowable();
+                        }
+                    } catch (JsonSyntaxException jsonEx) {
+                        ex.message = errorBody;
+                    }
+                }
+            } catch (IOException ioException) {
+                ex.message = "读取服务器错误信息失败：" + ioException.getMessage();
+            }
+//            ex.message = httpException.getMessage();
             return ex;
         }
         else if (e instanceof ServerException)

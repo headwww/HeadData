@@ -95,14 +95,24 @@ public abstract class BaseBodyRequest<R extends BaseBodyRequest>
     }
     
     /**
-     * 注意使用该方法上传字符串会清空实体中其他所有的参数，头信息不清除
+     * 带中括号的
      */
     public R upJson(String json)
+    {
+        this.json = "["+json+"]";
+        return (R)this;
+    }
+
+    /**
+     * 注意使用该方法上传字符串会清空实体中其他所有的参数，头信息不清除
+     */
+    public R upJsonRaw(String json)
     {
         this.json = json;
         return (R)this;
     }
-    
+
+
     /**
      * 注意使用该方法上传字符串会清空实体中其他所有的参数，头信息不清除
      */
